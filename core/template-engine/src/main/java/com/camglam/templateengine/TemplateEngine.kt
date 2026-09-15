@@ -93,10 +93,10 @@ class TemplateEngine {
     // Marco perimetral
     // ------------------------------------------------------------------
     private fun drawFrame(canvas: Canvas, template: TemplateSpec, w: Int, h: Int) {
-        val color = template.frameColorArgb ?: return
+        val frameColor = template.frameColorArgb ?: return
         val stroke = (h * template.frameThickness).coerceAtLeast(6f)
         val outer = Paint().apply {
-            this.color = color
+            this.color = frameColor
             style = Paint.Style.STROKE
             strokeWidth = stroke
         }
