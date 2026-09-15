@@ -7,7 +7,6 @@
 
 # Local configuration
 local.properties
-*.properties
 !gradle.properties
 
 # IDE
