@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.camglam.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.camglam.app"
