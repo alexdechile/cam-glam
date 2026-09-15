@@ -14,10 +14,12 @@ enum class TemplateFamily {
 
 /** Rol de una zona del layout de portada. */
 enum class LayoutZoneKind {
+    EYEBROW,
     MASTHEAD,
+    TAG,
     TITLE,
     SUBTITLE,
-    IMAGE,
+    FOOTER,
 }
 
 /**
@@ -46,7 +48,17 @@ data class TemplateSpec(
     val mastheadFontScale: Float = 1f,
     val title: String = "",
     val subtitle: String = "",
-    val frameColorArgb: Int? = null,   // borde estilo TIME/NatGeo
+    val accentArgb: Int? = null,        // acento editorial (reglas, sticker, spine)
+    val tagline: String = "",            // eyebrow pequeño espaciado
+    val tagText: String = "",            // texto de la esquina (sticker/TAG)
+    val issueLine: String = "",          // pie de portada en caps pequeñas
+    val frameColorArgb: Int? = null,     // borde estilo TIME/NatGeo
+    val frameThickness: Float = 0.025f,  // grosor relativo del marco
+    val frameDoubleStyle: Boolean = false,
+    val frameInnerArgb: Int? = null,     // hairline interior del marco doble
+    val leftSpine: Boolean = false,      // tira vertical de acento en el borde izq.
+    val spineText: String = "",          // inicial sobre la tira (TIME)
+    val accentTagRect: Boolean = false,  // TAG como sticker de acento relleno
     val layoutZones: List<LayoutZone> = emptyList(),
 )
 
@@ -58,13 +70,25 @@ object TemplateCatalog {
         family = TemplateFamily.VOGUE,
         masthead = "ESTYLE",
         mastheadArgb = 0xFFE4001B.toInt(),
-        mastheadFontScale = 1.1f,
+        mastheadFontScale = 1.05f,
         title = "LUZ & GLAMOUR",
-        subtitle = "ESTA TEMPORADA SE POSE",
+        subtitle = "LA TEMPORADA ES POSAR",
+        accentArgb = 0xFFE4001B.toInt(),
+        tagline = "BELLAS · RADIANTES · ÚNICAS",
+        tagText = "POSA",
+        issueLine = "ESTILO PARODIA · Nº 001 · 2026",
+        frameColorArgb = 0xFFE4001B.toInt(),
+        frameThickness = 0.010f,
+        frameDoubleStyle = true,
+        frameInnerArgb = 0xFFFFFFFF.toInt(),
+        accentTagRect = true,
         layoutZones = listOf(
-            LayoutZone(LayoutZoneKind.MASTHEAD, 0.05f, 0.02f, 0.90f, 0.12f),
-            LayoutZone(LayoutZoneKind.TITLE, 0.08f, 0.80f, 0.84f, 0.08f),
-            LayoutZone(LayoutZoneKind.SUBTITLE, 0.08f, 0.89f, 0.84f, 0.05f),
+            LayoutZone(LayoutZoneKind.EYEBROW, 0.08f, 0.020f, 0.62f, 0.050f),
+            LayoutZone(LayoutZoneKind.TAG, 0.80f, 0.020f, 0.17f, 0.050f),
+            LayoutZone(LayoutZoneKind.MASTHEAD, 0.04f, 0.055f, 0.92f, 0.15f),
+            LayoutZone(LayoutZoneKind.TITLE, 0.08f, 0.78f, 0.84f, 0.09f),
+            LayoutZone(LayoutZoneKind.SUBTITLE, 0.08f, 0.885f, 0.84f, 0.05f),
+            LayoutZone(LayoutZoneKind.FOOTER, 0.06f, 0.945f, 0.88f, 0.045f),
         ),
     )
 
@@ -75,10 +99,22 @@ object TemplateCatalog {
         mastheadArgb = 0xFFFFFFFF.toInt(),
         mastheadOutlineArgb = 0xFF111111.toInt(),
         title = "LA PORTADA ERES TÚ",
+        subtitle = "TU MOMENTO CUENTA",
+        accentArgb = 0xFFE4001B.toInt(),
+        tagline = "ESTABLECIDO EN 2026",
+        issueLine = "Nº 042 · PARODIA · 2026",
         frameColorArgb = 0xFFE4001B.toInt(),
+        frameThickness = 0.028f,
+        frameDoubleStyle = true,
+        frameInnerArgb = 0xFFFFFFFF.toInt(),
+        leftSpine = true,
+        spineText = "N",
         layoutZones = listOf(
-            LayoutZone(LayoutZoneKind.MASTHEAD, 0.06f, 0.03f, 0.60f, 0.10f),
-            LayoutZone(LayoutZoneKind.TITLE, 0.06f, 0.82f, 0.88f, 0.08f),
+            LayoutZone(LayoutZoneKind.EYEBROW, 0.07f, 0.030f, 0.70f, 0.050f),
+            LayoutZone(LayoutZoneKind.MASTHEAD, 0.07f, 0.055f, 0.50f, 0.15f),
+            LayoutZone(LayoutZoneKind.TITLE, 0.06f, 0.80f, 0.88f, 0.08f),
+            LayoutZone(LayoutZoneKind.SUBTITLE, 0.07f, 0.90f, 0.86f, 0.045f),
+            LayoutZone(LayoutZoneKind.FOOTER, 0.06f, 0.948f, 0.88f, 0.040f),
         ),
     )
 
@@ -86,13 +122,24 @@ object TemplateCatalog {
         id = "natgeo-style",
         family = TemplateFamily.NATGEO,
         masthead = "REFLEX",
-        mastheadArgb = 0xFFF7C81E.toInt(),
-        mastheadOutlineArgb = 0xFF111111.toInt(),
+        mastheadArgb = 0xFFFFFFFF.toInt(),
         title = "RARA BELLEZA",
+        subtitle = "ESTA TIERRA ES BELLA",
+        accentArgb = 0xFFF7C81E.toInt(),
+        tagline = "LA BELLEZA RARA",
+        tagText = "TODO MUNDO ES BELLO",
+        issueLine = "CAMGLAM · Nº 07 · PARODIA",
         frameColorArgb = 0xFFF7C81E.toInt(),
+        frameThickness = 0.030f,
+        frameDoubleStyle = true,
+        frameInnerArgb = 0xFF111111.toInt(),
         layoutZones = listOf(
-            LayoutZone(LayoutZoneKind.MASTHEAD, 0.06f, 0.03f, 0.62f, 0.10f),
-            LayoutZone(LayoutZoneKind.TITLE, 0.06f, 0.84f, 0.88f, 0.08f),
+            LayoutZone(LayoutZoneKind.EYEBROW, 0.07f, 0.030f, 0.60f, 0.050f),
+            LayoutZone(LayoutZoneKind.MASTHEAD, 0.07f, 0.055f, 0.55f, 0.14f),
+            LayoutZone(LayoutZoneKind.TAG, 0.52f, 0.055f, 0.42f, 0.060f),
+            LayoutZone(LayoutZoneKind.TITLE, 0.07f, 0.81f, 0.86f, 0.09f),
+            LayoutZone(LayoutZoneKind.SUBTITLE, 0.07f, 0.905f, 0.86f, 0.040f),
+            LayoutZone(LayoutZoneKind.FOOTER, 0.06f, 0.948f, 0.88f, 0.040f),
         ),
     )
 
