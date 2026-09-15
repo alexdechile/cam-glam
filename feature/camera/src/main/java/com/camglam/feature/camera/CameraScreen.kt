@@ -1,7 +1,9 @@
 package com.camglam.feature.camera
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -59,7 +62,9 @@ import com.camglam.media.OutputFormat
 import com.camglam.model.TemplateCatalog
 import com.camglam.model.TemplateSpec
 import com.camglam.templateengine.TemplateEngine
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private fun requiredPermissions(): Array<String> = buildList {
     add(Manifest.permission.CAMERA)
@@ -67,6 +72,11 @@ private fun requiredPermissions(): Array<String> = buildList {
         add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 }.toTypedArray()
+
+private fun hasPermissions(context: android.content.Context): Boolean =
+    requiredPermissions().all {
+        ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+    }
 
 /**
  * Pantalla de cámara — Fase 1.
@@ -76,13 +86,16 @@ private fun requiredPermissions(): Array<String> = buildList {
 @Composable
 fun CameraScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
+    var granted by remember { mutableStateOf(hasPermissions(context)) }
 
-    val granted = requiredPermissions().all {
-        ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions(),
+    ) { result ->
+        granted = result.values.all { granted -> granted }
     }
 
     if (!granted) {
-        PermissionRequestScreen()
+        PermissionRequestScreen(onRequest = { launcher.launch(requiredPermissions()) })
         return
     }
 
@@ -90,12 +103,7 @@ fun CameraScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun PermissionRequestScreen() {
-    val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions(),
-    ) { /* recomposición por estado de permisos */ }
-
+private fun PermissionRequestScreen(onRequest: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -120,7 +128,7 @@ private fun PermissionRequestScreen() {
                 textAlign = TextAlign.Center,
             )
             Spacer(Modifier.size(24.dp))
-            Button(onClick = { launcher.launch(requiredPermissions()) }) {
+            Button(onClick = onRequest) {
                 Text("Permitir cámara")
             }
         }
@@ -140,10 +148,13 @@ private fun CameraScreenContent(modifier: Modifier) {
     var selectedTemplate by remember { mutableStateOf(TemplateCatalog.VOGUE_STYLE) }
     var format by rememberSaveable { mutableStateOf(OutputFormat.JPEG) }
     var isSaving by remember { mutableStateOf(false) }
+    var lastPhotoUri by remember { mutableStateOf<Uri?>(null) }
     val snackbar = remember { SnackbarHostState() }
 
     LaunchedEffect(lifecycleOwner) {
-        controller.bindToCamera(context, lifecycleOwner)
+        withContext(Dispatchers.Default) {
+            controller.bindToCamera(context, lifecycleOwner)
+        }
     }
     DisposableEffect(Unit) {
         onDispose { controller.release() }
@@ -249,7 +260,8 @@ private fun CameraScreenContent(modifier: Modifier) {
                                     try {
                                         val photo = controller.capture()
                                         val cover = engine.compose(selectedTemplate, photo.bitmap)
-                                        MediaStoreExporter.save(context, cover, format)
+                                        val uri = MediaStoreExporter.save(context, cover, format)
+                                        lastPhotoUri = uri
                                         snackbar.showSnackbar("Portada guardada en Galería")
                                     } catch (t: Throwable) {
                                         snackbar.showSnackbar(
@@ -263,7 +275,27 @@ private fun CameraScreenContent(modifier: Modifier) {
                     ) {
                     }
 
-                    Box(modifier = Modifier.size(56.dp))
+                    IconButton(
+                        onClick = {
+                            val uri = lastPhotoUri ?: return@IconButton
+                            try {
+                                val type = context.contentResolver.getType(uri)
+                                val intent = Intent(Intent.ACTION_VIEW).apply {
+                                    setDataAndType(uri, type)
+                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                }
+                                context.startActivity(intent)
+                            } catch (t: Throwable) {
+                                snackbar.showSnackbar("No se pudo abrir la foto")
+                            }
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.PhotoLibrary,
+                            contentDescription = "Ver foto en Galería",
+                            tint = if (lastPhotoUri != null) Color.White else Color.White.copy(alpha = 0.35f),
+                        )
+                    }
                 }
             }
         }

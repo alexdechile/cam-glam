@@ -13,10 +13,12 @@ import androidx.camera.core.SurfaceRequest
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.lifecycle.LifecycleOwner
 import java.util.concurrent.Executors
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.guava.await
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -54,9 +56,15 @@ class CameraXController(
 
     override suspend fun bindToCamera(context: Context, lifecycleOwner: LifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner
-        val provider = ProcessCameraProvider.getInstance(context).await()
-        cameraProvider = provider
-        bindInternal()
+        // La espera del provider se hace fuera del main thread para no congelar
+        // la UI en el primer arranque en frío (frío de cámara después del permiso).
+        if (cameraProvider == null) {
+            cameraProvider = ProcessCameraProvider.getInstance(context).await()
+        }
+        // bindToLifecycle debe ejecutarse en el main thread.
+        withContext(Dispatchers.Main.immediate) {
+            bindInternal()
+        }
     }
 
     private fun bindInternal() {
