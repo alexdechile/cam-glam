@@ -9,6 +9,7 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
+import androidx.camera.core.SurfaceRequest
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.lifecycle.LifecycleOwner
 import java.util.concurrent.Executors
@@ -131,7 +132,7 @@ internal fun ImageProxy.toRotatedBitmap(): Bitmap {
     val decoded = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
         ?: throw IllegalStateException("No se pudo decodificar el JPEG capturado")
 
-    val rotation = rotationDegrees
+    val rotation = imageInfo.rotationDegrees
     if (rotation == 0) return decoded
 
     val matrix = Matrix().apply { postRotate(rotation.toFloat()) }
