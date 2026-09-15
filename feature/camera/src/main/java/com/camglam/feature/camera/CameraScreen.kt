@@ -260,7 +260,8 @@ private fun CameraScreenContent(modifier: Modifier) {
                                     }
                                 }
                             },
-                    )
+                    ) {
+                    }
 
                     Box(modifier = Modifier.size(56.dp))
                 }
