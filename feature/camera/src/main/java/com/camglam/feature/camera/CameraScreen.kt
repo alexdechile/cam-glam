@@ -278,15 +278,17 @@ private fun CameraScreenContent(modifier: Modifier) {
                     IconButton(
                         onClick = {
                             val uri = lastPhotoUri ?: return@IconButton
-                            try {
-                                val type = context.contentResolver.getType(uri)
-                                val intent = Intent(Intent.ACTION_VIEW).apply {
-                                    setDataAndType(uri, type)
-                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            scope.launch {
+                                try {
+                                    val type = context.contentResolver.getType(uri)
+                                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                                        setDataAndType(uri, type)
+                                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                    }
+                                    context.startActivity(intent)
+                                } catch (t: Throwable) {
+                                    snackbar.showSnackbar("No se pudo abrir la foto")
                                 }
-                                context.startActivity(intent)
-                            } catch (t: Throwable) {
-                                snackbar.showSnackbar("No se pudo abrir la foto")
                             }
                         },
                     ) {
