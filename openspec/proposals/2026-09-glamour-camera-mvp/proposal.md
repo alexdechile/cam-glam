@@ -178,7 +178,7 @@ Las plantillas se diseñan como **parodias originales de estilo**: mastheads pro
 | Fase | Alcance |
 |---|---|
 | **Fase 0 — Esqueleto** | Proyecto Gradle multi-módulo, tema, navegación, CI básico. |
-| **Fase 1 — Cámara MVP** | CameraX + preview, captura, overlay en vivo de 3 plantillas, exportar JPEG a MediaStore. |
+| **Fase 1 — Cámara MVP** | CameraX + preview, captura, overlay en vivo de 3 plantillas, exportar a MediaStore (JPG o PNG, FR-020). |
 | **Fase 2 — Editor** | Pan/zoom, edición de textos, 5 filtros ColorMatrix, previsualización. |
 | **Fase 3 — Pose** | ML Kit pose detection + stick figure de pose objetivo + match "¡PORTADA!" + recomendación de plantilla. |
 | **Fase 4 — Galería y legal** | "Mis portadas" con Room, modal de parodia + aviso visible + sello PARODIA en export. |

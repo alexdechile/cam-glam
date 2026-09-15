@@ -30,12 +30,19 @@ dependencies {
     api(project(":core:designsystem"))
     api(project(":core:model"))
     implementation(project(":core:camera"))
+    implementation(project(":core:template-engine"))
+    implementation(project(":core:media"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.camera.compose)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 }

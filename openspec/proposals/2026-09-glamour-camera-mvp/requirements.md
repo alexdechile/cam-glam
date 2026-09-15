@@ -31,6 +31,7 @@ ID base: `CAM`
 
 ### Exportación y galería
 - **FR-012 — Exportar a galería.** La portada final se compone a resolución nativa de captura y se guarda en MediaStore (JPEG, con orientación correcta).
+- **FR-020 — Selección de formato de exportación (JPG o PNG).** En el export, el usuario elige entre **JPG** (`Bitmap.compress`, calidad 95, compresión con pérdida) y **PNG** (pérdida cero, textos de masthead nítidos, ~2-4× más peso). Las miniaturas/galería interna siempre usan JPG para rendimiento; solo el archivo exportado respeta el formato elegido.
 - **FR-013 — Compartir.** Share sheet a apps externas (Instagram Stories, WhatsApp, etc.) con la portada exportada.
 - **FR-014 — Mis portadas.** Lista de portadas creadas (metadatos en Room, imagen desde MediaStore); re-exportar o eliminar.
 - **FR-015 — Offline-first.** Todo el MVP funciona sin conexión a red.

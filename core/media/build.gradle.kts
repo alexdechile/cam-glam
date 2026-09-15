@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.camglam.camera"
+    namespace = "com.camglam.media"
     compileSdk = 35
 
     defaultConfig {
@@ -19,14 +19,4 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-}
-
-dependencies {
-    api(libs.androidx.camera.core)
-    implementation(libs.androidx.camera.camera2)
-    implementation(libs.androidx.camera.lifecycle)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.coroutines.guava)
 }

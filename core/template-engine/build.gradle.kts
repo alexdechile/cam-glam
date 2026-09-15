@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.camglam.camera"
+    namespace = "com.camglam.templateengine"
     compileSdk = 35
 
     defaultConfig {
@@ -22,11 +22,5 @@ android {
 }
 
 dependencies {
-    api(libs.androidx.camera.core)
-    implementation(libs.androidx.camera.camera2)
-    implementation(libs.androidx.camera.lifecycle)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.coroutines.guava)
+    api(project(":core:model"))
 }

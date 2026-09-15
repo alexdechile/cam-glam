@@ -48,6 +48,12 @@ Cada criterio mapea a uno o más `FR`/`NFR`. Un criterio se considera cumplido s
 3. Activar "Añadir sello PARODIA" en export → la imagen guardada incluye el isotipo discreto "PARODIA"; desactivado → no aparece.
 4. Revisión de assets: ningún masthead usa marca registrada y la app no ofrece importar logotipos de terceros.
 
+### V-005c — Formato JPG/PNG (FR-020)
+**Pasos:**
+1. Exportar con formato **JPG** → archivo en galería con `mimeType image/jpeg`, extensión `.jpg`.
+2. Exportar la misma portada con formato **PNG** → archivo `image/png` `.png`, dimensiones idénticas a la de JPG, sin artefactos de compresión en el texto del masthead (inspección visual/pixel a 200%).
+3. Los dos archivos se guardan con calidad/orientación correcta; la app (miniaturas internas) sigue usando JPG aunque el export seleccionado sea PNG.
+
 ## NFR / validaciones de calidad
 
 ### V-006 — Rendimiento (NFR-002)
